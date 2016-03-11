@@ -19,6 +19,9 @@ extern "C"
 #endif	/* __cplusplus */
 
 #ifndef FIXEDFANN
+
+FANN_EXTERNAL float FANN_API fann_train_epoch_parallel(struct fann *ann, struct fann_train_data *data, const unsigned int threadnumb);
+
 FANN_EXTERNAL float FANN_API fann_train_epoch_batch_parallel(struct fann *ann, struct fann_train_data *data, const unsigned int threadnumb);
 
 FANN_EXTERNAL float FANN_API fann_train_epoch_irpropm_parallel(struct fann *ann, struct fann_train_data *data, const unsigned int threadnumb);

@@ -8,6 +8,31 @@
 #include "config.h"
 #include "fann.h"
 
+ /*
+  * Train for one epoch with the selected training algorithm 
+  */
+ FANN_EXTERNAL float FANN_API fann_train_epoch_parallel(struct fann *ann, struct fann_train_data *data, const unsigned int threadnumb)
+ {
+ 	if(fann_check_input_output_sizes(ann, data) == -1)
+ 		return 0;
+ 	
+ 	switch (ann->training_algorithm)
+ 	{
+ 	case FANN_TRAIN_QUICKPROP:
+ 		return fann_train_epoch_quickprop_parallel(ann, data, threadnumb);
+ 	case FANN_TRAIN_RPROP:
+ 		return fann_train_epoch_irpropm_parallel(ann, data, threadnumb);
+ 	case FANN_TRAIN_SARPROP:
+ 		return fann_train_epoch_sarprop_parallel(ann, data, threadnumb);
+ 	case FANN_TRAIN_BATCH:
+ 		return fann_train_epoch_batch_parallel(ann, data, threadnumb);
+ 	case FANN_TRAIN_INCREMENTAL:
+ 		return fann_train_epoch_incremental(ann, data);
+ 	}
+ 	return 0;
+ }
+
+
 FANN_EXTERNAL float FANN_API fann_train_epoch_batch_parallel(struct fann *ann, struct fann_train_data *data, const unsigned int threadnumb)
 {
 	/*vector<struct fann *> ann_vect(threadnumb);*/
