@@ -58,7 +58,12 @@ FANN_EXTERNAL float FANN_API fann_train_epoch_batch_parallel(struct fann *ann, s
 		for(i = 0; i < (int)data->num_data; i++)
 		{
 			j=omp_get_thread_num();
-			fann_run(ann_vect[j], data->input[i]);
+			if (ann->do_dropout) {
+				fann_run_dropout(ann_vect[j], data->input[i]);
+			}
+			else {
+				fann_run(ann_vect[j], data->input[i]);
+			}
 			fann_compute_MSE(ann_vect[j], data->output[i]);
 			fann_backpropagate_MSE(ann_vect[j]);
 			fann_update_slopes_batch(ann_vect[j], ann_vect[j]->first_layer + 1, ann_vect[j]->last_layer - 1);
@@ -138,7 +143,12 @@ FANN_EXTERNAL float FANN_API fann_train_epoch_irpropm_parallel(struct fann *ann,
 		for(i = 0; i < (int)data->num_data; i++)
 		{
 			j=omp_get_thread_num();
-			fann_run(ann_vect[j], data->input[i]);
+			if (ann->do_dropout) {
+				fann_run_dropout(ann_vect[j], data->input[i]);
+			}
+			else {
+				fann_run(ann_vect[j], data->input[i]);
+			}
 			fann_compute_MSE(ann_vect[j], data->output[i]);
 			fann_backpropagate_MSE(ann_vect[j]);
 			fann_update_slopes_batch(ann_vect[j], ann_vect[j]->first_layer + 1, ann_vect[j]->last_layer - 1);
@@ -257,7 +267,12 @@ FANN_EXTERNAL float FANN_API fann_train_epoch_quickprop_parallel(struct fann *an
 		for(i = 0; i < (int)data->num_data; i++)
 		{
 			j=omp_get_thread_num();
-			fann_run(ann_vect[j], data->input[i]);
+			if (ann->do_dropout) {
+				fann_run_dropout(ann_vect[j], data->input[i]);
+			}
+			else {
+				fann_run(ann_vect[j], data->input[i]);
+			}
 			fann_compute_MSE(ann_vect[j], data->output[i]);
 			fann_backpropagate_MSE(ann_vect[j]);
 			fann_update_slopes_batch(ann_vect[j], ann_vect[j]->first_layer + 1, ann_vect[j]->last_layer - 1);
@@ -393,7 +408,12 @@ FANN_EXTERNAL float FANN_API fann_train_epoch_sarprop_parallel(struct fann *ann,
 		for(i = 0; i < (int)data->num_data; i++)
 		{
 			j=omp_get_thread_num();
-			fann_run(ann_vect[j], data->input[i]);
+			if (ann->do_dropout) {
+				fann_run_dropout(ann_vect[j], data->input[i]);
+			}
+			else {
+				fann_run(ann_vect[j], data->input[i]);
+			}
 			fann_compute_MSE(ann_vect[j], data->output[i]);
 			fann_backpropagate_MSE(ann_vect[j]);
 			fann_update_slopes_batch(ann_vect[j], ann_vect[j]->first_layer + 1, ann_vect[j]->last_layer - 1);

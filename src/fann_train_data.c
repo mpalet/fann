@@ -115,7 +115,13 @@ float fann_train_epoch_quickprop(struct fann *ann, struct fann_train_data *data)
 
 	for(i = 0; i < data->num_data; i++)
 	{
-		fann_run(ann, data->input[i]);
+		if (ann->do_dropout) {
+			fann_run_dropout(ann, data->input[i]);
+		}
+		else {
+			fann_run(ann, data->input[i]);
+		}
+
 		fann_compute_MSE(ann, data->output[i]);
 		fann_backpropagate_MSE(ann);
 		fann_update_slopes_batch(ann, ann->first_layer + 1, ann->last_layer - 1);
@@ -141,7 +147,13 @@ float fann_train_epoch_irpropm(struct fann *ann, struct fann_train_data *data)
 
 	for(i = 0; i < data->num_data; i++)
 	{
-		fann_run(ann, data->input[i]);
+		if (ann->do_dropout) {
+			fann_run_dropout(ann, data->input[i]);
+		}
+		else {
+			fann_run(ann, data->input[i]);
+		}
+		
 		fann_compute_MSE(ann, data->output[i]);
 		fann_backpropagate_MSE(ann);
 		fann_update_slopes_batch(ann, ann->first_layer + 1, ann->last_layer - 1);
@@ -168,7 +180,13 @@ float fann_train_epoch_sarprop(struct fann *ann, struct fann_train_data *data)
 
 	for(i = 0; i < data->num_data; i++)
 	{
-		fann_run(ann, data->input[i]);
+		if (ann->do_dropout) {
+			fann_run_dropout(ann, data->input[i]);
+		}
+		else {
+			fann_run(ann, data->input[i]);
+		}
+
 		fann_compute_MSE(ann, data->output[i]);
 		fann_backpropagate_MSE(ann);
 		fann_update_slopes_batch(ann, ann->first_layer + 1, ann->last_layer - 1);
@@ -192,7 +210,13 @@ float fann_train_epoch_batch(struct fann *ann, struct fann_train_data *data)
 
 	for(i = 0; i < data->num_data; i++)
 	{
-		fann_run(ann, data->input[i]);
+		if (ann->do_dropout) {
+			fann_run_dropout(ann, data->input[i]);
+		}
+		else {
+			fann_run(ann, data->input[i]);
+		}
+
 		fann_compute_MSE(ann, data->output[i]);
 		fann_backpropagate_MSE(ann);
 		fann_update_slopes_batch(ann, ann->first_layer + 1, ann->last_layer - 1);

@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 
 #include "fann.h"
+#include "parallel_fann.h"
 
 float get_MSE(struct fann *ann, struct fann_train_data *data) {
 	int i;
@@ -36,7 +37,7 @@ int main()
 {
 	const unsigned int num_layers = 5;
 	const unsigned int num_neurons_hidden = 96;
-	const float desired_error = (const float) 0.005;
+	const float desired_error = (const float) 0.004;
 	const unsigned int max_epochs = 6000;
 	float error, error_dropout, error_test, error_test_dropout;
 	struct fann *ann, *ann_dropout;
@@ -60,12 +61,15 @@ int main()
 	ann_dropout = fann_copy(ann);
 
 	fann_set_do_dropout(ann_dropout, 1);
-	fann_set_dropout_fraction(ann_dropout, 0.3f);
+	fann_set_dropout_fraction(ann_dropout, 0.15f);
+	
+	/* seed the random number generator when using dropout */
+	fann_seed_rand();
 
 	for(i = 1; i <= max_epochs; i++)
 	{
-		error = fann_train_epoch(ann, train_data);
-		error_dropout = fann_train_epoch(ann_dropout, train_data);
+		error = fann_train_epoch_parallel(ann, train_data,8);
+		error_dropout = fann_train_epoch_parallel(ann_dropout, train_data,8);
 		error_test = get_MSE(ann, test_data);
 		error_test_dropout = get_MSE(ann_dropout, test_data);
 		printf("Epochs     %8d. TRAIN ERROR dropout: %.10f - no dropout: %.10f    TEST ERROR dropout: %.10f - no dropout: %.10f\n", i, error_dropout, error, error_test_dropout, error_test);

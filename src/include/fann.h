@@ -287,6 +287,14 @@ FANN_EXTERNAL struct fann * FANN_API fann_copy(struct fann *ann);
 */ 
 FANN_EXTERNAL fann_type * FANN_API fann_run(struct fann *ann, fann_type * input);
 
+/* Function: fann_run_dropout
+	Run the neural network doing dropout
+	
+*/ 
+FANN_EXTERNAL fann_type * FANN_API fann_run_dropout(struct fann *ann, fann_type * input);
+
+
+
 /* Function: fann_randomize_weights
 	Give each connection a random weight between *min_weight* and *max_weight*
    

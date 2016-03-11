@@ -93,8 +93,13 @@ fann_type fann_activation(struct fann * ann, unsigned int activation_function, f
 FANN_EXTERNAL void FANN_API fann_train(struct fann *ann, fann_type * input,
 									   fann_type * desired_output)
 {
-	fann_run(ann, input);
-
+	if (ann->do_dropout) {
+		fann_run_dropout(ann, input);
+	}
+	else {
+		fann_run(ann, input);
+	}
+	
 	fann_compute_MSE(ann, desired_output);
 
 	fann_backpropagate_MSE(ann);
