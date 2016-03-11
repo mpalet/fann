@@ -798,6 +798,12 @@ struct fann
 	 */
 	float *scale_factor_out;
 #endif
+
+	/* flag for activation of dropout regularization */
+	unsigned int do_dropout;
+
+	/* fraction of neurons to dropout from the hidden layers */
+	float dropout_fraction;
 };
 
 /* Type: fann_connection

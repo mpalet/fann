@@ -1422,4 +1422,34 @@ FANN_EXTERNAL float FANN_API fann_get_sarprop_temperature(struct fann *ann);
    */ 
 FANN_EXTERNAL void FANN_API fann_set_sarprop_temperature(struct fann *ann, float sarprop_temperature);
 
+
+/* Function: fann_get_do_dropout
+ 
+  Returns dropout enabled/disabled
+ */ 
+FANN_EXTERNAL int FANN_API fann_get_do_dropout(struct fann *ann);
+
+
+/* Function: fann_set_do_dropout
+
+   Enables/disables dropout
+
+ */ 
+FANN_EXTERNAL void FANN_API fann_set_do_dropout(struct fann *ann, int do_dropout);
+
+/* Function: fann_get_dropout_fraction
+ 
+  Returns the dropout fraction of hidden neurons
+ */ 
+FANN_EXTERNAL float FANN_API fann_get_dropout_fraction(struct fann *ann);
+
+
+/* Function: fann_set_dropout_fraction
+
+  Sets the dropout fraction of hidden neurons
+
+ */ 
+FANN_EXTERNAL void FANN_API fann_set_dropout_fraction(struct fann *ann, float dropout_fraction);
+
+
 #endif

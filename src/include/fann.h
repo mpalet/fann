@@ -653,6 +653,7 @@ FANN_EXTERNAL unsigned int FANN_API fann_get_decimal_point(struct fann *ann);
 */ 
 FANN_EXTERNAL unsigned int FANN_API fann_get_multiplier(struct fann *ann);
 
+
 #endif	/* FIXEDFANN */
 
 #ifdef __cplusplus

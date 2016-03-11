@@ -556,6 +556,19 @@ FANN_EXTERNAL struct fann *FANN_API fann_create_shortcut_array(unsigned int num_
 	return ann;
 }
 
+
+//return random sample from binomial distribution
+int binomial(int n, double p) {
+  int x = 0; 
+  for(int i = 0; i < n; i++) {
+    if(fann_rand(0.0,1.0) < p)
+      x++;
+  }
+
+  return x;
+}
+
+
 FANN_EXTERNAL fann_type *FANN_API fann_run(struct fann * ann, fann_type * input)
 {
 	struct fann_neuron *neuron_it, *last_neuron, *neurons, **neuron_pointers;
@@ -565,6 +578,11 @@ FANN_EXTERNAL fann_type *FANN_API fann_run(struct fann * ann, fann_type * input)
 	struct fann_layer *layer_it, *last_layer;
 	unsigned int activation_function;
 	fann_type steepness;
+
+	/* seed the random number generator when using dropout */
+	if (ann->do_dropout) {
+		fann_seed_rand();
+	}
 
 	/* store some variabels local for fast access */
 	struct fann_neuron *first_neuron = ann->first_layer->first_neuron;
@@ -793,6 +811,21 @@ FANN_EXTERNAL fann_type *FANN_API fann_run(struct fann * ann, fann_type * input)
 			neuron_it->sum = neuron_sum;
 
 			fann_activation_switch(activation_function, neuron_sum, neuron_it->value);
+
+			/* 
+			   Dropout of the hidden units of the network
+			 */
+			if ((ann->do_dropout) && (layer_it != last_layer-1)) {
+				//drop random neurons to 0 following binomial distribution
+				if (binomial(1, 1.0 - ann->dropout_fraction) == 0) {
+					neuron_it->value = 0.0f; //neuron value
+					//neuron_it->sum = 0.0f;
+				}
+				//rescale neurons by the inverse of the dropout fraction
+				else {
+					neuron_it->value *= (1.0/(1.0 - ann->dropout_fraction));
+				}
+			}
 #endif
 		}
 	}
@@ -1097,6 +1130,10 @@ FANN_EXTERNAL struct fann* FANN_API fann_copy(struct fann* orig)
         memcpy(copy->prev_weights_deltas, orig->prev_weights_deltas,copy->total_connections_allocated * sizeof(fann_type));
     }
 
+    /* copy dropout data */
+    copy->do_dropout = orig->do_dropout;
+    copy->dropout_fraction = orig->dropout_fraction;
+
     return copy;
 }
 
@@ -1309,6 +1346,8 @@ FANN_EXTERNAL void FANN_API fann_print_parameters(struct fann *ann)
 		
 	printf("Cascade candidate groups             :%4d\n", ann->cascade_num_candidate_groups);
 	printf("Cascade no. of candidates            :%4d\n", fann_get_cascade_num_candidates(ann));
+	printf("Dropout                              :%s\n", (ann->do_dropout ? "enabled" : "disabled"));
+	printf("Dropout fraction                     :%8.3f\n", ann->dropout_fraction);
 	
 	/* TODO: dump scale parameters */
 #endif
@@ -1690,6 +1729,10 @@ struct fann *fann_allocate_structure(unsigned int num_layers)
  
 	fann_init_error_data((struct fann_error *) ann);
 
+	/* Variables for the dropout implementation */
+	ann->do_dropout = 0;
+	ann->dropout_fraction = 0.1f;
+
 #ifdef FIXEDFANN
 	/* these values are only boring defaults, and should really
 	 * never be used, since the real values are always loaded from a file. */
@@ -1865,4 +1908,3 @@ void fann_seed_rand()
     }
 #endif
 }
-
