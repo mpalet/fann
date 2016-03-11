@@ -561,8 +561,9 @@ FANN_EXTERNAL struct fann *FANN_API fann_create_shortcut_array(unsigned int num_
 
 //return random sample from binomial distribution
 int binomial(int n, double p) {
+  int i;
   int x = 0; 
-  for(int i = 0; i < n; i++) {
+  for(i = 0; i < n; i++) {
     if(fann_rand(0.0,1.0) < p)
       x++;
   }
